@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'letsencrypt_heroku'
+
+LetsencryptHeroku::CLI.run
