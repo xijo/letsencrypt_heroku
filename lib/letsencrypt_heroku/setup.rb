@@ -26,22 +26,22 @@ module LetsencryptHeroku
       run_task 'register with letsencrypt server' do
         @private_key = OpenSSL::PKey::RSA.new(4096)
         @client = Acme::Client.new(private_key: @private_key, endpoint: config.endpoint)
-        @client.register(contact: "mailto:#{config.contact}").agree_terms or fail_task
+        @client.register(contact: "mailto:#{config.contact}").agree_terms or fail_task('failed resiger')
       end
 
       config.domains.each do |domain|
         run_task "authorize #{domain}" do
           @challenge = @client.authorize(domain: domain).http01
 
-          command = "heroku config:set LETSENCRYPT_RESPONSE=#{@challenge.file_content} &> /dev/null"
-          `#{command}`
-          $?.success? or fail_task
+          command = "heroku config:set LETSENCRYPT_RESPONSE=#{@challenge.file_content}"
+          output = `#{command}`
+          $?.success? or fail_task(output)
 
           test_response(domain: domain, challenge: @challenge)
 
           @challenge.request_verification
           sleep(1) while 'pending' == @challenge.verify_status
-          @challenge.verify_status == 'valid' or fail_task
+          @challenge.verify_status == 'valid' or fail_task("failed authorization")
         end
       end
 
@@ -54,12 +54,13 @@ module LetsencryptHeroku
         File.write('fullchain.pem', certificate.fullchain_to_pem)
 
         command = "heroku _certs:update fullchain.pem privkey.pem --confirm #{config.herokuapp}"
-        `#{command}`
-        $?.success? or fail_task
+        output = `#{command}`
+        $?.success? or fail_task(output)
 
         FileUtils.rm %w(privkey.pem fullchain.pem)
       end
-    rescue SetupError
+    rescue SetupError => e
+      puts Rainbow(e.message).red
     end
 
     def test_response(domain:, challenge:)
@@ -74,7 +75,7 @@ module LetsencryptHeroku
           return
         end
       end
-      fail_task
+      fail_task('failed test response')
     end
 
     def run_task(name)
