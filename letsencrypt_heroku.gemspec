@@ -14,14 +14,17 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/xijo/letsencrypt_heroku'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "bin"
-  spec.require_paths = ["lib"]
+  spec.bindir        = 'bin'
+  spec.require_paths = ['lib']
   spec.executables   << 'letsencrypt_heroku'
 
-  spec.add_dependency "rainbow"
-  spec.add_dependency "acme-client"
+  spec.add_dependency 'rainbow'
+  spec.add_dependency 'acme-client'
+  spec.add_dependency 'tty-spinner'
+  # See https://github.com/schubergphilis/letsencrypt/issues/36
+  spec.add_dependency 'json-jwt', '1.5.2'
 
-  spec.add_development_dependency "bundler", "~> 1.12"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency 'bundler', '~> 1.12'
+  spec.add_development_dependency 'rake',    '~> 10.0'
+  spec.add_development_dependency 'rspec',   '~> 3.0'
 end

@@ -1,4 +1,5 @@
 require 'rainbow'
+require 'tty-spinner'
 require 'yaml'
 require 'acme-client'
 require 'openssl'

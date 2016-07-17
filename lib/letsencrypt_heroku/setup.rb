@@ -1,3 +1,5 @@
+require 'open3'
+
 module LetsencryptHeroku
   class Setup
     class SetupError < StandardError ; end
@@ -33,9 +35,7 @@ module LetsencryptHeroku
         run_task "authorize #{domain}" do
           @challenge = @client.authorize(domain: domain).http01
 
-          command = "heroku config:set LETSENCRYPT_RESPONSE=#{@challenge.file_content}"
-          output = `#{command}`
-          $?.success? or fail_task(output)
+          execute "heroku config:set LETSENCRYPT_RESPONSE=#{@challenge.file_content}"
 
           test_response(domain: domain, challenge: @challenge)
 
@@ -53,14 +53,11 @@ module LetsencryptHeroku
         File.write('privkey.pem', certificate.request.private_key.to_pem)
         File.write('fullchain.pem', certificate.fullchain_to_pem)
 
-        command = "heroku _certs:update fullchain.pem privkey.pem --confirm #{config.herokuapp}"
-        output = `#{command}`
-        $?.success? or fail_task(output)
-
+        execute "heroku _certs:update fullchain.pem privkey.pem --confirm #{config.herokuapp}"
         FileUtils.rm %w(privkey.pem fullchain.pem)
       end
     rescue SetupError => e
-      puts Rainbow(e.message).red
+      exit
     end
 
     def test_response(domain:, challenge:)
@@ -78,15 +75,27 @@ module LetsencryptHeroku
       fail_task('failed test response')
     end
 
+    def execute(command)
+      Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
+        wait_thr.value.success? or fail_task(stderr.read.force_encoding('utf-8').sub(' ▸    ', 'heroku: '))
+      end
+    end
+
     def run_task(name)
-      @_current_task = name
-      print Rainbow("      #{@_current_task}").yellow
+      @_spinner = TTY::Spinner.new(" :spinner #{name}",
+        format: :dots,
+        interval: 20,
+        frames: [ "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" ].map { |s| Rainbow(s).yellow.bright },
+        success_mark: Rainbow('✔').green,
+        error_mark: Rainbow('✘').red
+      )
+      @_spinner.start
       yield
-      puts Rainbow("\r    ✔ #{@_current_task}").green
+      @_spinner.success
     end
 
     def fail_task(reason = nil)
-      puts Rainbow("\r    ✘ #{@_current_task}").red
+      @_spinner.error("(#{reason.strip})")
       raise SetupError, reason
     end
   end
