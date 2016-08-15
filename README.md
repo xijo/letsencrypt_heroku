@@ -19,13 +19,19 @@ You'll need a `config/letsencrypt_heroku.yml`
 
     - contact:    contact@foobar.dev
       domains:    foobar.dev www.foobar.dev
-      herokuapp:  foobar
+      heroku_app: foobar
 
 And finally execute
 
     $ letsencrypt_heroku
 
+Please note that your application needs to be restarted for every individual domain in your config. The restart happens
+automatically when the heroku challenge response gets set as environment variable.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/xijo/letsencrypt_heroku.
 
+## TODO
+
+- configurable config file location
