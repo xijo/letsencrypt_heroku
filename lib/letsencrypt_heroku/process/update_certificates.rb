@@ -12,9 +12,9 @@ class LetsencryptHeroku::Process
         File.write('fullchain.pem', certificate.fullchain_to_pem)
 
         if has_already_cert(herokuapp)
-          execute "heroku _certs:update fullchain.pem privkey.pem --confirm #{herokuapp} --app #{herokuapp}"
+          execute "heroku certs:update fullchain.pem privkey.pem --confirm #{herokuapp} --app #{herokuapp}"
         else
-          execute "heroku _certs:add fullchain.pem privkey.pem --app #{herokuapp}"
+          execute "heroku certs:add fullchain.pem privkey.pem --app #{herokuapp}"
         end
         FileUtils.rm %w(privkey.pem fullchain.pem)
       end
@@ -22,7 +22,7 @@ class LetsencryptHeroku::Process
     end
 
     def has_already_cert(herokuapp)
-      Open3.popen3("heroku _certs:info --app #{herokuapp}") do |stdin, stdout, stderr, wait_thr|
+      Open3.popen3("heroku certs:info --app #{herokuapp}") do |stdin, stdout, stderr, wait_thr|
         return wait_thr.value.success?
       end
     end
