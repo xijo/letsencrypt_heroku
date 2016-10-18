@@ -7,7 +7,7 @@ module LetsencryptHeroku
     end
 
     def perform
-      [PrepareConfig, CheckPreconditions, SetupClient, AuthorizeDomains, UpdateCertificates].each do |klass|
+      [PrepareConfig, SetupClient, AuthorizeDomains, UpdateCertificates].each do |klass|
         klass.new.perform(context)
       end
     end
