@@ -4,12 +4,10 @@ module LetsencryptHeroku
       puts "\n #{Rainbow(msg).blue} #{values.to_s}\n\n"
     end
 
-    def output(name)
+    def output(name, &block)
       log name
       @_spinner = build_spinner(name)
-      @_spinner.start
-      yield
-      @_spinner.success
+      @_spinner.run &block
     rescue LetsencryptHeroku::TaskError
       exit
     end
