@@ -8,6 +8,7 @@ module LetsencryptHeroku
       log name
       @_spinner = build_spinner(name)
       @_spinner.run &block
+      @_spinner.success
     rescue LetsencryptHeroku::TaskError
       exit
     end
