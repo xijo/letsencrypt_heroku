@@ -78,6 +78,13 @@ Run `curl -vI https://www.example.dev` and check that it has a section that look
 
 You may also check the results of [qualys ssltest](https://www.ssllabs.com/ssltest).
 
+### Renewal
+
+Once the process ran through the renewal is as simple as: run `letsencrypt_heroku` - again.
+
+You'll receive emails from letsencrypt from time to time to remind you to renew your certificates.
+
+
 ## Useful links and information
 
 * https://www.ssllabs.com/ssltest
