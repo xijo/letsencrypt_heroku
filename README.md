@@ -23,7 +23,7 @@ _Precondition: make sure the [heroku cli](https://devcenter.heroku.com/articles/
 1. Install [the gems](#the-gems)
 2. Deploy your application
 3. Write [configuration file](#configuration)
-4. Run `letsencrypt_heroku`
+4. Run `letsencrypt_heroku` on your local machine
 5. [Verify SSL is working correctly](#verify-ssl-is-working-correctly)
 
 ### The gems
