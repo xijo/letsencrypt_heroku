@@ -1,4 +1,4 @@
-# LetsencryptHeroku
+# letsencrypt_heroku
 
 CLI tool to automate SSL certificate setup and renewal for **letsencrypt** and **rails** (or any other rack based application).
 
