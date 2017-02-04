@@ -16,6 +16,8 @@ request to be correctly answered on this domain. To automate this process this g
 
 ## Installation
 
+_Precondition: make sure the [heroku cli](https://devcenter.heroku.com/articles/heroku-cli) is installed on your development machine._
+
 ### In a nutshell
 
 1. Install [the gems](#the-gems)
@@ -65,10 +67,16 @@ Please note that your application will be restarted for every single domain in y
 
 ### Verify SSL is working correctly
 
-If `curl -vI https://www.example.dev` outputs this line everything is fine: `SSL certificate verify ok`.
+Run `curl -vI https://www.example.dev` and check that it has a section that looks like this:
 
-You might also want to check the results of [ssltest](https://www.ssllabs.com/ssltest) every now and then to find out if you're vulnerable to any attack vector.
+```
+* TLS 1.2 connection using TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+* Server certificate: blindlunch.team
+* Server certificate: Let's Encrypt Authority X3
+* Server certificate: DST Root CA X3
+```
 
+You may also check the results of [qualys ssltest](https://www.ssllabs.com/ssltest).
 
 ## Useful links and information
 
