@@ -27,7 +27,7 @@ module LetsencryptHeroku
 
     def execute(command)
       log command
-      Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
+      Open3.popen3("unset RUBYOPT; #{command}") do |stdin, stdout, stderr, wait_thr|
         out, err = stdout.read, stderr.read
         log out
         log err
