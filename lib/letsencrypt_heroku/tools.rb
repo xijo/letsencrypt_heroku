@@ -25,13 +25,17 @@ module LetsencryptHeroku
       raise LetsencryptHeroku::TaskError, reason
     end
 
-    def execute(command)
+    def execute(command, &block)
       log command
       Open3.popen3("unset RUBYOPT; #{command}") do |stdin, stdout, stderr, wait_thr|
-        out, err = stdout.read, stderr.read
-        log out
-        log err
-        wait_thr.value.success? or error(err.force_encoding('utf-8').sub(' ▸    ', 'heroku: '))
+        if block
+          block.call(stdin, stdout, stderr, wait_thr)
+        else
+          out, err = stdout.read, stderr.read
+          log out
+          log err
+          wait_thr.value.success? or error(err.force_encoding('utf-8').sub(' ▸    ', 'heroku: '))
+        end
       end
     end
 
