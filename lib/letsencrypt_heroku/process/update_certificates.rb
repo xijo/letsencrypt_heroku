@@ -22,7 +22,7 @@ class LetsencryptHeroku::Process
     end
 
     def has_already_cert(herokuapp)
-      Open3.popen3("heroku certs:info --app #{herokuapp}") do |stdin, stdout, stderr, wait_thr|
+      execute("heroku certs:info --app #{herokuapp}") do |stdin, stdout, stderr, wait_thr|
         return wait_thr.value.success?
       end
     end
