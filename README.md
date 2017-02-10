@@ -39,6 +39,14 @@ To perform SSL certificate setup and renewal a command line tool is used: `letse
 
 `letsencrypt_rack` contains a tiny rack middleware, that answers challenge request at the following path: `/.well-known/acme-challenge`. It serves the contents of the `LETSENCRYPT_RESPONSE` environment variable.
 
+#### For not rails apps
+
+You need to add `LetsencryptRack::Middleware` middlewware to your rack stack:
+```ruby
+# in config.ru
+
+use LetsencryptRack::Middleware
+```
 
 ### Configuration
 
