@@ -19,16 +19,23 @@ module LetsencryptHeroku
   class CLI
     CONFIG_FILE = 'config/letsencrypt_heroku.yml'
 
-    # generate config?
+    def self.run(opts)
+      entries = read_config_file(opts[:config])
+      entries = limit_entries(entries, opts[:limit])
+      entries.each { |entry| Process.new(entry).perform }
+    end
 
-    # limit to domain, skip other configs
+    def self.limit_entries(entries, limit)
+      return entries if limit.nil?
+      puts "Restrict to domains including: #{Rainbow(limit).yellow}"
+      entries.select { |c| c.domains.include?(limit) }
+    end
 
-    def self.run
-      if File.exist?(CONFIG_FILE)
-        configs = Array(YAML.load(File.read(CONFIG_FILE))).map { |c| OpenStruct.new(c) }
-        configs.each { |config| Process.new(config).perform }
+    def self.read_config_file(file)
+      if File.exist?(file)
+        Array(YAML.load(File.read(file))).map { |c| OpenStruct.new(c) }
       else
-        puts Rainbow("Missing config: #{CONFIG_FILE}").red
+        abort "Config file not found: #{Rainbow(file).red}"
       end
     end
   end

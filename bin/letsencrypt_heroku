@@ -1,40 +1,26 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
+require 'slop'
 require 'letsencrypt_heroku'
-require 'optparse'
 
-class Parser
-  def self.parse(options)
-    args = {}
+opts = Slop.parse do |o|
+  o.string '-c', '--config',
+    'path to config file (default: config/letsencrypt_heroku.yml)',
+    default: 'config/letsencrypt_heroku.yml'
 
-    opt_parser = OptionParser.new do |opts|
-      opts.banner = "Usage: letsencrypt_heroku [options]"
+  o.string '-l', '--limit',
+    'include only hosts that match the given string'
 
-      # opts.on("-rNAME", "--restriction=NAME", "Restrict process to config entries where at least one domain matches the given value") do |restriction|
-      #   args[:restriction] = restriction
-      # end
+  o.bool '-h', '--help',
+    'print this helpful information'
 
-      # opts.on("-s", "--setup", "Generate config and put it into config/letsencrypt_heroku.yml") do |n|
-      #   LetsencryptHeroku::ConfigBuilder.new.perform
-      #   exit
-      # end
-
-      # opts.on("-c", "--check", "Parse config and print problems") do |n|
-      #   puts "perform check"
-      #   exit
-      # end
-
-      opts.on("-h", "--help", "Prints this help") do
-        puts opts
-        exit
-      end
-    end
-
-    opt_parser.parse!(options)
-    return args
-  end
+  o.on('-v', '--version', 'print the version') { puts LetsencryptHeroku::VERSION ; exit }
 end
-options = Parser.parse ARGV
 
-LetsencryptHeroku::CLI.run
+if opts.help?
+  puts opts
+  exit
+end
+
+LetsencryptHeroku::CLI.run(opts)

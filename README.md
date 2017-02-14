@@ -93,6 +93,17 @@ Once the process ran through the renewal is as simple as: run `letsencrypt_herok
 You'll receive emails from letsencrypt from time to time to remind you to renew your certificates.
 
 
+### CLI options
+
+
+```ruby
+# Use a custom config file location
+$ letsencrypt_heroku --config=another.yml
+
+# Restrict for which domains the process should be run
+$ letsencrypt_heroku --limit=foobar
+```
+
 ## Useful links and information
 
 * https://www.ssllabs.com/ssltest
