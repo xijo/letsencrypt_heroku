@@ -1,5 +1,3 @@
-require 'fileutils'
-
 class LetsencryptHeroku::Process
   class UpdateCertificates
     include LetsencryptHeroku::Tools
