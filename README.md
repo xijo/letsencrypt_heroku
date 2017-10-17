@@ -70,6 +70,8 @@ Each block in this configuration will issue a new certificate, so if you need to
   heroku_app: stg-example-dev-application
 ```
 
+You can add `keep_certs: true` to a block if you need to keep the generated certificate.
+
 Please note that your application will be restarted for every single domain in your config. The restart happens automatically when the heroku challenge response gets set as environment variable.
 
 
