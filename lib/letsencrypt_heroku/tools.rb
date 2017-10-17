@@ -11,7 +11,7 @@ module LetsencryptHeroku
       block.call
       @_spinner.success
     rescue LetsencryptHeroku::TaskError
-      exit
+      exit false
     end
 
     def log(message, level: :info)
