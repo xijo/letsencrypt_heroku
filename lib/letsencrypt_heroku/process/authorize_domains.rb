@@ -30,7 +30,7 @@ class LetsencryptHeroku::Process
       while answer != challenge.file_content
         error('failed test response') if fail_count > 30
         fail_count += 1
-        sleep(1)
+        sleep(5)
         answer = `curl -sL #{url}`
       end
     end
