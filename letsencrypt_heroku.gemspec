@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.executables   << 'letsencrypt_heroku'
 
   spec.add_dependency 'rainbow'
-  spec.add_dependency 'acme-client'
+  spec.add_dependency 'acme-client', '~> 1.0.0'
   spec.add_dependency 'tty-spinner'
   spec.add_dependency 'slop'
 
